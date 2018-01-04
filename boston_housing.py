@@ -24,7 +24,7 @@
 # 
 # 运行下面区域的代码以载入波士顿房屋数据集，以及一些此项目所需的Python库。如果成功返回数据集的大小，表示数据集已载入成功。
 
-# In[10]:
+# In[1]:
 
 
 # 载入此项目所需要的库
@@ -40,7 +40,7 @@ if version_info.major != 2 and version_info.minor != 7:
 get_ipython().magic(u'matplotlib inline')
 
 
-# In[11]:
+# In[2]:
 
 
 # 载入波士顿房屋的数据集
@@ -68,7 +68,7 @@ print "Boston housing dataset has {} data points with {} variables each.".format
 # - 计算`prices`中的`'MEDV'`的最小值、最大值、均值、中值和标准差；
 # - 将运算结果储存在相应的变量中。
 
-# In[12]:
+# In[3]:
 
 
 #TODO 1
@@ -120,7 +120,7 @@ print "Standard deviation of prices: ${:,.2f}".format(std_price)
 #   - 分割比例为：80%的数据用于训练，20%用于测试；
 #   - 选定一个数值以设定 `train_test_split` 中的 `random_state` ，这会确保结果的一致性；
 
-# In[13]:
+# In[4]:
 
 
 # TODO 2
@@ -129,7 +129,7 @@ print "Standard deviation of prices: ${:,.2f}".format(std_price)
 from sklearn.model_selection import train_test_split
 
 
-X_train, X_test, y_train, y_test = train_test_split(features,prices,test_size=0.2)
+X_train, X_test, y_train, y_test = train_test_split(features,prices,test_size=0.2,random_state=10)
 
 
 # ### 问题 2 - 训练及测试
@@ -161,7 +161,7 @@ X_train, X_test, y_train, y_test = train_test_split(features,prices,test_size=0.
 # 
 # - (可选) 不使用任何外部库，参考[决定系数的定义](https://en.wikipedia.org/wiki/Coefficient_of_determination)进行计算，这也可以帮助你更好的理解决定系数在什么情况下等于0或等于1。
 
-# In[14]:
+# In[5]:
 
 
 # TODO 3
@@ -177,7 +177,7 @@ def performance_metric(y_true, y_predict):
     return score
 
 
-# In[15]:
+# In[6]:
 
 
 # TODO 3 可选
@@ -186,15 +186,6 @@ def performance_metric(y_true, y_predict):
 #R2 = { ( 1 / N ) * Σ [ (xi - x) * (yi - y) ] / (σx * σy ) }2
 def performance_metric2(y_true, y_predict):
     """计算并返回预测值相比于预测值的分数"""
-    
-    y_true_mean = np.mean(y_true)
-    y_predict_mean = np.mean(y_predict)
-    
-    
-    temp = np.sum([(x - y_true_mean) * (y - y_predict_mean) for x,y in zip(y_true,y_predict)])            / (np.std(y_true) * np.std(y_predict))
-    
-  
-    score =   ((1.0 / len(y_true)) * temp) ** 2
 
     return score
 
@@ -214,7 +205,7 @@ def performance_metric2(y_true, y_predict):
 # 
 # **提示**：运行下方的代码，使用`performance_metric`函数来计算模型的决定系数。
 
-# In[16]:
+# In[7]:
 
 
 # 计算这个模型的预测结果的决定系数
@@ -233,7 +224,7 @@ print "Model has a coefficient of determination, R^2, of {:.3f}.".format(score)
 # 
 # 运行下方区域中的代码，并利用输出的图形回答下面的问题。
 
-# In[17]:
+# In[8]:
 
 
 # 根据不同的训练集大小，和最大深度，生成学习曲线
@@ -248,11 +239,11 @@ vs.ModelLearning(X_train, y_train)
 # ### 问题 4 - 回答:
 # 图一最大深度为1。
 # 
-# 随着训练数据量的增加，训练集曲线先由1快速下降到0.6以下，再缓慢降低
+# 随着训练数据量的增加，训练集曲线先由1快速下降到0.6左右，再缓慢降低
 # 
-# 验证曲线集先由0快速增加到0.4左右，然后缓慢上升
+# 验证曲线集先由0快速增加到0.3左右，然后缓慢上升
 # 
-# 当训练数据达到100后曲线呈收敛趋势，增加更多的数据曲线有可能会收敛到一个特定值
+# 当训练数据达到50后曲线呈收敛趋势，增加更多的数据曲线有可能会收敛到一个特定值
 # 
 
 # ### 复杂度曲线
@@ -260,7 +251,7 @@ vs.ModelLearning(X_train, y_train)
 # 
 # 运行下方区域中的代码，并利用输出的图形并回答下面的两个问题。
 
-# In[18]:
+# In[9]:
 
 
 # 根据不同的最大深度参数，生成复杂度曲线
@@ -304,7 +295,7 @@ vs.ModelComplexity(X_train, y_train)
 
 # ### 问题 7 - 回答:
 # 网格搜索法是指定参数值的一种穷举搜索方法，通过将估计函数的参数通过交叉验证的方法进行优化来得到最优的学习算法。 
-# 即，将各个参数可能的取值进行排列组合，列出所有可能的组合结果生成“网格”。然后将各组合用于SVM训练，并使用交叉验证对表现进行评估。在拟合函数尝试了所有的参数组合后，返回一个合适的分类器，自动调整至最佳参数组合
+# 即，将各个参数可能的取值进行排列组合，列出所有可能的组合结果生成“网格”。然后将各组合用于模型训练，并对每种组合进行评估找到参数最优组合
 
 # ### 问题 8 - 交叉验证
 # - 什么是K折交叉验证法（k-fold cross-validation）？
@@ -315,8 +306,10 @@ vs.ModelComplexity(X_train, y_train)
 # **提示：** 在下面 fit_model函数最后加入 `print pd.DataFrame(grid.cv_results_)` 可以帮你查看更多信息。
 
 # ### 问题 8 - 回答：
-# 将训练数据集分为k个包，然后将模型训练k次，每次将不同的包用作验证集，而剩下的点作为训练集，最后计算结果的平均值来得到最终模型
-# cv_results_ 每次训练和验证的得分，平均测试得分，平均训练得分
+# 将训练数据集随机分为k个包，然后将模型训练k次，每次将不同的包用作验证集，而剩下的点作为训练集，最后计算结果的平均值来得到最终模型<br>
+# 当我我们把训练数据划分为8:2的训练集和验证集，然后每个参数组合在训练集上训练，验证集上打分。选出表现最好的一组参数。这样的网格搜索没有使用交叉验证。每次使用重复的数据集进行训练会得到非常好的结果，但不能用来预测新的数据，也就是过度拟合。为了避免这种情况交叉验证将训练数据分割成较小子集，现在一个子集上做分析，其他子集用来做后续对此分析的确认及验证
+# 
+# 'cv_results_'可以获得 每次训练和验证的得分，平均测试得分，平均训练得分
 
 # ### 编程练习 4：训练最优模型
 # 在这个练习中，你将需要将所学到的内容整合，使用**决策树算法**训练一个模型。为了得出的是一个最优模型，你需要使用网格搜索法训练模型，以找到最佳的 `'max_depth'` 参数。你可以把`'max_depth'` 参数理解为决策树算法在做出预测前，允许其对数据提出问题的数量。决策树是**监督学习算法**中的一种。
@@ -331,7 +324,7 @@ vs.ModelComplexity(X_train, y_train)
 #   
 # 如果你对python函数的默认参数定义和传递不熟悉，可以参考这个MIT课程的[视频](http://cn-static.udacity.com/mlnd/videos/MIT600XXT114-V004200_DTH.mp4)。
 
-# In[19]:
+# In[10]:
 
 
 # TODO 4
@@ -373,7 +366,7 @@ fit_model(features,prices)
 # - 计算当前模型的交叉验证分数
 # - 返回最优交叉验证分数对应的模型
 
-# In[20]:
+# In[11]:
 
 
 # TODO 4 可选
@@ -403,7 +396,7 @@ def fit_model2(X, y):
 # 
 # 运行下方区域内的代码，将决策树回归函数代入训练数据的集合，以得到最优化的模型。
 
-# In[21]:
+# In[12]:
 
 
 # 基于训练数据，获得最优模型
@@ -434,7 +427,7 @@ print "Parameter 'max_depth' is {} for the optimal model.".format(optimal_reg.ge
 # 
 # 运行下列的代码区域，使用你优化的模型来为每位客户的房屋价值做出预测。
 
-# In[27]:
+# In[13]:
 
 
 # 生成三个客户的数据
@@ -451,10 +444,10 @@ for i, price in enumerate(predicted_price):
 
 # ### 问题 10 - 回答：
 
-# In[29]:
+# In[15]:
 
 
-np.mean([415800.00,232618.75,892850.00])
+np.mean([406933.33,232200.00,938053.85])
 
 
 # 分析数据时获得的数据：<br>
@@ -463,21 +456,24 @@ np.mean([415800.00,232618.75,892850.00])
 # Mean price: 454,342.94 <br>
 # Median price 438,900.00 <br>
 # Standard deviation of prices: 165,171.13
+# 
+# 
+# 
 # 预测数据：<br>
-# 1、415800.00<br>
-# 2、232618.75<br>
-# 3、892850.00<br>
+# 1、406933.33<br>
+# 2、232200.00<br>
+# 3、938053.85<br>
 # 最大值：892850.00<br>
 # 最小值：232618.75<br>
 # 平均值：513756.25<br>
 # 
-# 这三间房屋价格的平均值为513756.25与454342.94相差不大，最大值和最小值在105,000.00和1,024,800.00之间。
+# 这三间房屋价格的平均值为525729.06与454342.94相差不大，最大值和最小值在105,000.00和1,024,800.00之间。
 # 三间房屋中房间数最多，底收入阶层比率最小，学生老师比最小的房子价格最高；房间数最少，底收入阶层比率最高，学生老师比最大的价格最低；可以看出这三间房屋的价格是根据'RM'、'LSTAT'、'PTRATIO'这三个特征值进行预测的所以比较合理
 
 # ### 编程练习 5
 # 你刚刚预测了三个客户的房子的售价。在这个练习中，你将用你的最优模型在整个测试数据上进行预测, 并计算相对于目标变量的决定系数 R<sup>2</sup>的值**。
 
-# In[30]:
+# In[16]:
 
 
 #TODO 5
@@ -498,7 +494,7 @@ print "Optimal model has R^2 score {:,.2f} on test data".format(r2)
 # 你刚刚计算了最优模型在测试集上的决定系数，你会如何评价这个结果？
 
 # ### 问题11 - 回答
-# R<sup>2</sup>为0.8接近于1，但不是很接近，有参考价值但参考价值不是太大
+# R<sup>2</sup>为0.75接近于1，但不是很接近，有参考价值但参考价值不是太大
 
 # ### 模型健壮性
 # 
@@ -510,18 +506,18 @@ print "Optimal model has R^2 score {:,.2f} on test data".format(r2)
 # 
 # **提示**: 执行下方区域中的代码，采用不同的训练和测试集执行 `fit_model` 函数10次。注意观察对一个特定的客户来说，预测是如何随训练数据的变化而变化的。
 
-# In[28]:
+# In[17]:
 
 
 # 请先注释掉 fit_model 函数里的所有 print 语句
 vs.PredictTrials(features, prices, fit_model, client_data)
 
 
-# In[31]:
+# In[18]:
 
 
 price_data = [391183.33,411417.39,415800.00,420622.22,413334.78,
-              411931.58,399663.16,407232.00,402531.82,413700.00]
+              411931.58,399663.16,414430.43,402531.82,413700.00]
 
 
 #TODO 1
@@ -550,8 +546,8 @@ print "Standard deviation of prices: ${:,.2f}".format(std_price)
 
 
 # ### 问题 12 - 回答：
-# 10次预测的价格最大值是420,622.22最小值是391,183.33，相差29,438.89,预测波动的最大范围相对于中值411,674.48来说很小（差不多为中值的二十分之一）<br>
-# 10次预测的标准偏差为8,279.74远小于平均价格408,741.63，每次预测的差异很小<br>
+# 10次预测的价格最大值是420,622.22最小值是391,183.33，相差29,438.89,预测波动的最大范围相对于中值412,633.18来说很小（差不多为中值的二十分之一）<br>
+# 10次预测的标准偏差为8,428.77远小于平均价格409,461.47，每次预测的差异很小<br>
 # 模型足够健壮来保证预测的一致性
 
 # ### 问题 13 - 实用性探讨
